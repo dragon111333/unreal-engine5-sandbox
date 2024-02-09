@@ -19,6 +19,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	class UInputMappingContext* InputMapping;
+
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -26,7 +29,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "VALUE")
 	UStaticMeshComponent * MainMesh;
 
-private :
-		void MoveForward(const FInputActionInstance& Instance);
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+	class UMyInputConfigData* InputActions;
 
+private :
+		//void MoveForward(float value);
+		void MoveForward();
+	
 };

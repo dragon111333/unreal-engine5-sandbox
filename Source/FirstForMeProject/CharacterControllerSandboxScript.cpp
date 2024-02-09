@@ -1,6 +1,9 @@
 #include "CharacterControllerSandboxScript.h"
 #include "EngineUtils.h"
-#include "../../../../../../../Program Files/Epic Games/UE_5.3/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputComponent.h"
+#include "EnhancedInputComponent.h"
+#include <EnhancedInputSubsystems.h>
+
+
 
 ACharacterControllerSandboxScript::ACharacterControllerSandboxScript()
 {
@@ -19,6 +22,7 @@ ACharacterControllerSandboxScript::ACharacterControllerSandboxScript()
 void ACharacterControllerSandboxScript::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp,Warning,  TEXT("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!Created Character!!!!!!!!!!!!!!!!!!!!!!!!!!!"));
 }
 
 void ACharacterControllerSandboxScript::Tick(float DeltaTime)
@@ -27,17 +31,21 @@ void ACharacterControllerSandboxScript::Tick(float DeltaTime)
 
 }
 
-void ACharacterControllerSandboxScript::MoveForward(const FInputActionInstance& Instance) {
-	UE_LOG(LogTemp, Warning, TEXT("TESTTTTT %f"),Value);
+void ACharacterControllerSandboxScript::MoveForward() {
+	UE_LOG(LogTemp, Warning, TEXT("------------------- Test input -----------------"));
 }
 
 void ACharacterControllerSandboxScript::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	//PlayerInputComponent->BindAxis("MoveForward",this,&ACharacterControllerSandboxScript::MoveForward);
 
-	UEnhancedInputComponent* fdasf = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	fdsf->BindAction(AimingInputAction, ETriggerEvent::Triggered, this, &ACharacterControllerSandboxScript::MoveForward);
+	APlayerController* PC = Cast<APlayerController>(GetController());
 
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer());
+	Subsystem->ClearAllMappings();
+	Subsystem->AddMappingContext(InputMapping, 0);
+
+	UEnhancedInputComponent* PEI = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	PEI->BindAction(ACharacterControllerSandboxScript::InputActions->InputMove, ETriggerEvent::Triggered, this, &AInputExampleCharacter::Move);
 }
 
